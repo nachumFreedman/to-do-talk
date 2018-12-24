@@ -1,25 +1,50 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import List from './List';
 import './App.css';
 
 class App extends Component {
+  state = {
+    toDos: [],
+    nextToDo: '',
+    
+  }
+  
+  deleteItem = (index) => {
+    this.setState({
+      toDos:this.state.toDos.filter((_, i)=> (i !== index))
+    });
+  }
+
+  addToDo = () => {
+    this.setState({toDos: this.state.toDos.length ? null : this.state.toDos.concat('Drink beer so we can code')})
+  }
+  
+  componentDidMount(){
+    console.log('component has mounted!')
+    this.addToDo()
+  }
+
+  setNextToDo = (event) => {
+    this.setState({ nextToDo: event.target.value })
+    console.log(event.target)
+  }
+
+  submitToDo = (event) =>
+    this.setState({
+      nextToDo: '',
+      toDos: (this.state.nextToDo) ?  this.state.toDos : [...this.state.toDos, this.state.nextToDo] 
+    });
+  
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+     
+        <input value={this.state.nextToDo}
+               onChange={this.setNextToDo}/>
+        
+        <button onClick={this.submitToDo}>Submit</button>
+        <List toDos={this.state.toDos}
+              deleteItem={this.deleteItem}/>
       </div>
     );
   }
